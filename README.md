@@ -6,7 +6,7 @@
 
 # Petal Performance Minecraft JAR
 
-Petal is a performance-oriented fork of Purpur intended to increase performance for entity-heavy servers by implementing multi-threaded and async improvements.
+Petal is a performance-oriented fork of Purpur intended to increase performance for entity-heavy servers by implementing multi-threaded and asynchronous improvements.
 
 ## Sponsored by Bloom Host
 
