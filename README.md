@@ -2,7 +2,7 @@
 [discord]: https://discord.gg/bloom
 [release]: https://github.com/Bloom-host/Petal/releases
 
-<img src="https://bloom.host/assets/images/Petal.png" alt="petal_logo" width="80" height="80">
+<img src="https://bloom.host/assets/images/petal-logo.png" alt="petal_logo" width="80" height="80">
 
 # Petal Performance Minecraft JAR
 
