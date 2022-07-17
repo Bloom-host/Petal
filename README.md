@@ -24,7 +24,7 @@ Petal focuses on two specific improvements for entity-heavy servers:
 - **Multi-threaded Entity Tracking** Entity tracking can take advantage of multiple threads to greatly reduce dependence on main thread processing
 
 
-As Petal is forked from Purpur, it enjoys several performance features from previous projects including:
+As Petal is forked from Purpur, it enjoys several performance features from other projects including:
 
 - **Sentry Integration** Easily track all errors coming from your server in excruciating detail (Pufferfish)
 - **Better Entity Performance** Reduces the performance impact of entities by skipping useless work and making barely-noticeable changes to behavior (Pufferfish)
