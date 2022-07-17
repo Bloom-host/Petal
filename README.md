@@ -10,6 +10,8 @@ Petal is a performance-oriented fork of Purpur intended to increase performance 
 
 ## Sponsored by Bloom Host
 
+<img src="https://bloom.host/assets/images/logo-white.svg" alt="bloom_logo" width="240" height="80">
+
 Development of this fork is sponsored by [Bloom Host][website], your home for the highest performance dedicated-core Minecraft hosting, VPS hosting, and bare metal dedicated servers. Bloom serves thousands of customers across the world with locations in Virginia, Dallas, Los Angeles, Miami, Germany, and soon to be Singapore! 
 
 Join the [Bloom Host discord][discord] to connect with over 4,000 members and learn more about their services. Petal official support is limited to customers of Bloom Host.
