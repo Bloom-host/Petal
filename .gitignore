@@ -1,0 +1,9 @@
+.gradle/
+.idea/
+
+petal-api/
+petal-server/
+
+build-data/
+build/
+run/

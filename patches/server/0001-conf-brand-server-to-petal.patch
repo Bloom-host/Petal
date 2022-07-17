@@ -1,0 +1,186 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: peaches94 <peachescu94@gmail.com>
+Date: Tue, 14 Jun 2022 21:20:31 -0500
+Subject: [PATCH] conf: brand server to petal
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index fd3805da1f276c76a2e814f755f6755245ec2ff4..92842974ebdaeb4f44fd3966088920d4539edd35 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -9,7 +9,7 @@ plugins {
+ }
+ 
+ dependencies {
+-    implementation(project(":purpur-api")) // Purpur
++    implementation(project(":petal-api")) // Purpur // petal
+     // Pufferfish start
+     implementation("io.papermc.paper:paper-mojangapi:1.19-R0.1-SNAPSHOT") {
+         exclude("io.papermc.paper", "paper-api")
+@@ -87,7 +87,7 @@ tasks.jar {
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+             "Implementation-Title" to "CraftBukkit",
+-            "Implementation-Version" to "git-Purpur-$implementationVersion",// Purpur
++            "Implementation-Version" to "git-petal-$implementationVersion",// Purpur // petal
+             "Implementation-Vendor" to date, // Paper
+             "Specification-Title" to "Bukkit",
+             "Specification-Version" to project.version,
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index acd95cf1dc7f009b63e44e4404e1736283fd458e..f10c8cde1bf11db618fcd128aa60c3b524746360 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -593,7 +593,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Purpur
++                Metrics metrics = new Metrics("petal", serverUUID, logFailedRequests, Bukkit.getLogger()); // Purpur // petal
+ 
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+@@ -603,7 +603,7 @@ public class Metrics {
+ 
+                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : (io.papermc.paper.configuration.GlobalConfiguration.get().proxies.isProxyOnlineMode() ? "bungee" : "offline"))); // Purpur
+-                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Purpur
++                metrics.addCustomChart(new Metrics.SimplePie("petal_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Purpur // petal
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+index fba5dbdb7bcbb55400ef18342c9b54612972a718..3f9aa4292ff45c6b6af0ddfeecb645f813ec5eca 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -33,8 +33,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Nonnull
+     @Override
+     public Component getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Purpur-".length()).split("[-\\s]"); // Purpur
+-        final Component updateMessage = getUpdateStatusMessage("PurpurMC/Purpur", "ver/" + getMinecraftVersion(), parts[0]); // Purpur
++        String[] parts = serverVersion.substring("git-petal-".length()).split("[-\\s]"); // Purpur // petal
++        final Component updateMessage = getUpdateStatusMessage("Bloom-host/petal", "ver/" + getMinecraftVersion(), parts[0]); // Purpur // petal
+         final Component history = getHistory();
+ 
+         return history != null ? Component.join(net.kyori.adventure.text.JoinConfiguration.separator(Component.newline()), history, updateMessage) : updateMessage; // Purpur
+@@ -58,6 +58,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+ 
+     private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
+         //int distance; // Purpur - use field
++        // petal start
++        /*
+         try {
+             int jenkinsBuild = Integer.parseInt(versionInfo);
+             distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+@@ -65,6 +67,10 @@ public class PaperVersionFetcher implements VersionFetcher {
+             versionInfo = versionInfo.replace("\"", "");
+             distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
+         }
++         */
++        versionInfo = versionInfo.replace("\"", "");
++        distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
++        // petal end
+ 
+         switch (distance) {
+             case -1:
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 2ece154b5e7daaa3e0b128145fc5e1d452125f72..36854f0c3be5b17b771d73c3863e45adf3267933 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         shutdownThread = Thread.currentThread();
+         org.spigotmc.WatchdogThread.doStop(); // Paper
+         if (!isSameThread()) {
+-            MinecraftServer.LOGGER.info("Stopping main thread (Ignore any thread death message you see! - DO NOT REPORT THREAD DEATH TO PURPUR)"); // Purpur
++            MinecraftServer.LOGGER.info("Stopping main thread (Ignore any thread death message you see! - DO NOT REPORT THREAD DEATH TO PETAL)"); // Purpur // petal
+             while (this.getRunningThread().isAlive()) {
+                 this.getRunningThread().stop();
+                 try {
+@@ -1682,7 +1682,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     @DontObfuscate
+     public String getServerModName() {
+-        return org.purpurmc.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        // petal start
++        final String purpurModName = org.purpurmc.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++
++        return switch (purpurModName) {
++            case "Purpur" -> "petal";
++            default -> purpurModName;
++        };
++        // petal end
+     }
+ 
+     public SystemReport fillSystemReport(SystemReport details) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 7208236ee3c604620fd0d0afe49215320e45e24b..62f3ee7b1b12239319f00882b854fcbe3a8d5ed8 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+ 
+ public final class CraftServer implements Server {
+-    private final String serverName = "Purpur"; // Paper // Purpur
++    private final String serverName = "petal"; // Paper // Purpur // petal
+     private final String serverVersion;
+     private final String bukkitVersion = Versioning.getBukkitVersion();
+     private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index fb87620c742ff7912f5e8ccd2a7930dd605576d9..8c0215954360adf6c51bd71994273e8b6b8e07a3 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.purpurmc.purpur/purpur-api/pom.properties"); // Purpur
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/host.bloom.petal/petal-api/pom.properties"); // Purpur // petal
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index 4a88fbee3566ba54b615745a2e4801691f494557..d89aecd421b83d539d29fd5e87c1bf9a992ab2dc 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -155,14 +155,14 @@ public class WatchdogThread extends Thread
+                 if (isLongTimeout) {
+                 // Paper end
+                 log.log( Level.SEVERE, "------------------------------" );
+-                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Purpur bug." ); // Paper // Purpur
++                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a petal bug." ); // Paper // Purpur // petal
+                 log.log( Level.SEVERE, "If you see a plugin in the Server thread dump below, then please report it to that author" );
+                 log.log( Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring" );
+                 log.log( Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once" );
+                 log.log( Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes" );
+-                log.log( Level.SEVERE, "If you are unsure or still think this is a Purpur bug, please report this to https://github.com/PurpurMC/Purpur/issues" ); // Purpur
++                log.log( Level.SEVERE, "If you are unsure or still think this is a petal bug, please report this to https://github.com/Bloom-host/petal/issues" ); // Purpur // petal
+                 log.log( Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports" );
+-                log.log( Level.SEVERE, "Purpur version: " + Bukkit.getServer().getVersion() ); // Purpur
++                log.log( Level.SEVERE, "petal version: " + Bukkit.getServer().getVersion() ); // Purpur // petal
+                 //
+                 if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
+                 {
+@@ -185,12 +185,12 @@ public class WatchdogThread extends Thread
+                 // Paper end
+                 } else
+                 {
+-                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PURPUR - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---"); // Purpur
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PETAL - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---"); // Purpur // petal
+                     log.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
+                 }
+                 // Paper end - Different message for short timeout
+                 log.log( Level.SEVERE, "------------------------------" );
+-                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Purpur!):" ); // Paper // Purpur
++                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to petal!):" ); // Paper // Purpur // petal
+                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 this.dumpTickingInfo(); // Paper - log detailed tick information
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
+@@ -206,7 +206,7 @@ public class WatchdogThread extends Thread
+                     WatchdogThread.dumpThread( thread, log );
+                 }
+                 } else {
+-                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PURPUR - THIS IS NOT A BUG OR A CRASH ---"); // Purpur
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PETAL - THIS IS NOT A BUG OR A CRASH ---"); // Purpur // petal
+                 }
+ 
+                 log.log( Level.SEVERE, "------------------------------" );
