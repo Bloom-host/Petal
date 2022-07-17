@@ -20,7 +20,7 @@ For a limited time, you can enjoy 15% off your first invoice for any Minecraft/V
 
 Petal focuses on two specific improvements for entity-heavy servers:
 
-- **Async Pathfinding** Entity pathfinding is performed asynchronously to completely offload processing from the main thread
+- **Async Pathfinding** Entity pathfinding is offloaded to asynchronous threads to singificantly reduce processing from the main thread
 - **Multi-threaded Entity Tracking** Entity tracking can take advantage of multiple threads to greatly reduce dependence on main thread processing
 
 
