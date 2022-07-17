@@ -13,10 +13,10 @@ that. this multithreaded tracker remains accurate, non-breaking and fast
 
 diff --git a/src/main/java/host/bloom/tracker/MultithreadedTracker.java b/src/main/java/host/bloom/tracker/MultithreadedTracker.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e5f3cf027534fe87e8b7d5e9fd14604b2327c701
+index 0000000000000000000000000000000000000000..31a9a1dbb68cdbc5dc8a83542ddc7e0467ee8fd3
 --- /dev/null
 +++ b/src/main/java/host/bloom/tracker/MultithreadedTracker.java
-@@ -0,0 +1,125 @@
+@@ -0,0 +1,128 @@
 +package host.bloom.tracker;
 +
 +import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -68,7 +68,7 @@ index 0000000000000000000000000000000000000000..e5f3cf027534fe87e8b7d5e9fd14604b
 +
 +            while (this.taskIndex.get() < this.entityTickingChunks.getListSize()) {
 +                this.runMainThreadTasks();
-+                this.handleTask(); // assist
++                this.handleTasks(5); // assist
 +            }
 +
 +            while (this.finishedTasks.get() != parallelism) {
@@ -94,25 +94,28 @@ index 0000000000000000000000000000000000000000..e5f3cf027534fe87e8b7d5e9fd14604b
 +
 +    private void run() {
 +        try {
-+            while (handleTask()) ;
++            while (handleTasks(10));
 +        } finally {
 +            this.finishedTasks.incrementAndGet();
 +        }
 +    }
 +
-+    private boolean handleTask() {
++    private boolean handleTasks(int tasks) {
 +        int index;
-+        while ((index = this.taskIndex.getAndIncrement()) < this.entityTickingChunks.getListSize()) {
-+            LevelChunk chunk = this.entityTickingChunks.rawGet(index);
-+            if (chunk != null) {
-+                try {
-+                    this.processChunk(chunk);
-+                } catch (Throwable throwable) {
-+                    MinecraftServer.LOGGER.warn("Ticking tracker failed", throwable);
-+                }
++        while ((index = this.taskIndex.getAndAdd(tasks)) < this.entityTickingChunks.getListSize()) {
++            for (int i = index; i < index + tasks && i < this.entityTickingChunks.getListSize(); i++) {
++                LevelChunk chunk = this.entityTickingChunks.rawGet(i);
++                if (chunk != null) {
++                    try {
++                        this.processChunk(chunk);
++                    } catch (Throwable throwable) {
++                        MinecraftServer.LOGGER.warn("Ticking tracker failed", throwable);
++                    }
 +
-+                return true;
++                }
 +            }
++
++            return true;
 +        }
 +
 +        return false;

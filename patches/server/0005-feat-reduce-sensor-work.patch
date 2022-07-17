@@ -54,23 +54,3 @@ index 34db1bd524bb97fbbe0f86b088a2ac343e730f5e..1df1e912194c4d2b934859d999e6d09e
  
          if (i % 2 != 0 && this.tickCount > 1) {
              this.level.getProfiler().push("targetSelector");
-diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/NearestLivingEntitySensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/NearestLivingEntitySensor.java
-index d8cf99a3014a4b8152ae819fa663c2fdf34dce57..6cce3def9c52cb365c7e831be42eceb1e0710cb4 100644
---- a/src/main/java/net/minecraft/world/entity/ai/sensing/NearestLivingEntitySensor.java
-+++ b/src/main/java/net/minecraft/world/entity/ai/sensing/NearestLivingEntitySensor.java
-@@ -18,7 +18,14 @@ public class NearestLivingEntitySensor<T extends LivingEntity> extends Sensor<T>
-         List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, aABB, (e) -> {
-             return e != entity && e.isAlive();
-         });
--        list.sort(Comparator.comparingDouble(entity::distanceToSqr));
-+        // petal start - use manual comparison because we don't need the accuracy of Double.compare
-+        list.sort((e1, e2) -> {
-+            double dist1 = entity.distanceToSqr(e1), dist2 = entity.distanceToSqr(e2);
-+            if (dist1 < dist2) return -1;
-+            if (dist1 > dist2) return 1;
-+            return 0;
-+        });
-+        // petal end
-         Brain<?> brain = entity.getBrain();
-         brain.setMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES, list);
-         brain.setMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, new NearestVisibleLivingEntities(entity, list));
