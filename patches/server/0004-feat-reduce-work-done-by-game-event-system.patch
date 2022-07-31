@@ -8,10 +8,10 @@ Subject: [PATCH] feat: reduce work done by game event system
 2. euclideangameeventdispatcher is not used concurrently so we ban that usage for improved performance with allays
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 0d82ca8ba9f2b11213cfe1ab01dc6ef3f2f510c9..bad88fddd25a99fdbe35285f7694fed26f943296 100644
+index c50dc34a731477c76315d8ef6b59b8539b76c7e3..56b454400d317c807a9d550a5ff6d152db7eddaa 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1672,6 +1672,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1673,6 +1673,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  if (chunk != null) {
                      for (int j2 = k; j2 <= j1; ++j2) {
                          flag |= chunk.getEventDispatcher(j2).walkListeners(event, emitterPos, emitter, (gameeventlistener, vec3d1) -> {

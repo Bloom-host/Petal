@@ -84,10 +84,10 @@ index fba5dbdb7bcbb55400ef18342c9b54612972a718..3f9aa4292ff45c6b6af0ddfeecb645f8
          switch (distance) {
              case -1:
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2ece154b5e7daaa3e0b128145fc5e1d452125f72..36854f0c3be5b17b771d73c3863e45adf3267933 100644
+index d678c6e0109dabe93485fb214622a0213c790f26..ba6e40eeea7a19c616bdef8905ef7fa59bf0320a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -913,7 +913,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -916,7 +916,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -96,7 +96,7 @@ index 2ece154b5e7daaa3e0b128145fc5e1d452125f72..36854f0c3be5b17b771d73c3863e45ad
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1682,7 +1682,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1683,7 +1683,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -113,7 +113,7 @@ index 2ece154b5e7daaa3e0b128145fc5e1d452125f72..36854f0c3be5b17b771d73c3863e45ad
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 7208236ee3c604620fd0d0afe49215320e45e24b..62f3ee7b1b12239319f00882b854fcbe3a8d5ed8 100644
+index 000007e77e73153d3d634a3ab5882916bd8b43a3..32cf406d1b0675b2863597f5202e728078f9b6e4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
