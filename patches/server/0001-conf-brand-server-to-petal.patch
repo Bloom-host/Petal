@@ -5,7 +5,7 @@ Subject: [PATCH] conf: brand server to petal
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index fd3805da1f276c76a2e814f755f6755245ec2ff4..92842974ebdaeb4f44fd3966088920d4539edd35 100644
+index a9acec9feef3c5322ce2c312cd8800bcdaca0947..1c09cd32303c7805d1dae6dccccceaddf3187cde 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,7 +9,7 @@ plugins {
@@ -15,7 +15,7 @@ index fd3805da1f276c76a2e814f755f6755245ec2ff4..92842974ebdaeb4f44fd3966088920d4
 -    implementation(project(":purpur-api")) // Purpur
 +    implementation(project(":petal-api")) // Purpur // petal
      // Pufferfish start
-     implementation("io.papermc.paper:paper-mojangapi:1.19-R0.1-SNAPSHOT") {
+     implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") { // Purpur
          exclude("io.papermc.paper", "paper-api")
 @@ -87,7 +87,7 @@ tasks.jar {
          attributes(
@@ -84,7 +84,7 @@ index fba5dbdb7bcbb55400ef18342c9b54612972a718..3f9aa4292ff45c6b6af0ddfeecb645f8
          switch (distance) {
              case -1:
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d678c6e0109dabe93485fb214622a0213c790f26..ba6e40eeea7a19c616bdef8905ef7fa59bf0320a 100644
+index 3d30dbb66d05f76545e119243cba4d549cbae714..64b6c1a907fb0216a42652c0c557b60974e1f46a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -916,7 +916,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -96,7 +96,7 @@ index d678c6e0109dabe93485fb214622a0213c790f26..ba6e40eeea7a19c616bdef8905ef7fa5
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1683,7 +1683,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1700,7 +1700,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -113,10 +113,10 @@ index d678c6e0109dabe93485fb214622a0213c790f26..ba6e40eeea7a19c616bdef8905ef7fa5
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 000007e77e73153d3d634a3ab5882916bd8b43a3..32cf406d1b0675b2863597f5202e728078f9b6e4 100644
+index b9c0d8d598aeac99e1fbc77063e5e2f280ca1693..722f419718f56d812ab2bc08aa0d5957f40e8774 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
+@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
