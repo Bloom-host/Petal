@@ -723,7 +723,7 @@ index 27cd393e81f6ef9b5690c051624d8d2af50acd34..da870c729a8a4673d734e8704355ad1c
              if (this.canUpdatePath()) {
                  this.followThePath();
 diff --git a/src/main/java/net/minecraft/world/entity/ai/navigation/GroundPathNavigation.java b/src/main/java/net/minecraft/world/entity/ai/navigation/GroundPathNavigation.java
-index f610c06d7bb51ec2c63863dd46711712986a106a..ff5f0788e1df9ea7a96a8fea475cc010d12e9772 100644
+index f0248d839255763005ba333b0bfcf691407fb69b..f86adf5a8f5f2e720697956fdb0c7fd32f3fecf0 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/navigation/GroundPathNavigation.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/navigation/GroundPathNavigation.java
 @@ -15,6 +15,15 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
@@ -752,10 +752,10 @@ index f610c06d7bb51ec2c63863dd46711712986a106a..ff5f0788e1df9ea7a96a8fea475cc010
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
-index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d692b05ec 100644
+index d4bb3b8ab9a8ba01cf9d27cf1417cb820c713057..3175b31bd40ec563a996891f08dba5b8fbe88543 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/navigation/PathNavigation.java
-@@ -151,6 +151,9 @@ public abstract class PathNavigation {
+@@ -150,6 +150,9 @@ public abstract class PathNavigation {
              return null;
          } else if (!this.canUpdatePath()) {
              return null;
@@ -765,7 +765,7 @@ index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d
          } else if (this.path != null && !this.path.isDone() && positions.contains(this.targetPos)) {
              return this.path;
          } else {
-@@ -177,11 +180,20 @@ public abstract class PathNavigation {
+@@ -176,11 +179,20 @@ public abstract class PathNavigation {
              PathNavigationRegion pathNavigationRegion = new PathNavigationRegion(this.level, blockPos.offset(-i, -i, -i), blockPos.offset(i, i, i));
              Path path = this.pathFinder.findPath(pathNavigationRegion, this.mob, positions, followRange, distance, this.maxVisitedNodesMultiplier);
              //this.level.getProfiler().pop(); // Purpur
@@ -791,7 +791,7 @@ index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d
  
              return path;
          }
-@@ -228,8 +240,8 @@ public abstract class PathNavigation {
+@@ -227,8 +239,8 @@ public abstract class PathNavigation {
              if (this.isDone()) {
                  return false;
              } else {
@@ -802,7 +802,7 @@ index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d
                      return false;
                  } else {
                      this.speedModifier = speed;
-@@ -253,6 +265,8 @@ public abstract class PathNavigation {
+@@ -252,6 +264,8 @@ public abstract class PathNavigation {
              this.recomputePath();
          }
  
@@ -811,7 +811,7 @@ index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d
          if (!this.isDone()) {
              if (this.canUpdatePath()) {
                  this.followThePath();
-@@ -278,6 +292,7 @@ public abstract class PathNavigation {
+@@ -277,6 +291,7 @@ public abstract class PathNavigation {
      }
  
      protected void followThePath() {
@@ -819,7 +819,7 @@ index efdd3069934e089863b07694e26b68ff567bd05b..eab95c7eae0bf9b448fb8edf50a5354d
          Vec3 vec3 = this.getTempMobPos();
          this.maxDistanceToWaypoint = this.mob.getBbWidth() > 0.75F ? this.mob.getBbWidth() / 2.0F : 0.75F - this.mob.getBbWidth() / 2.0F;
          Vec3i vec3i = this.path.getNextNodePos();
-@@ -440,7 +455,7 @@ public abstract class PathNavigation {
+@@ -439,7 +454,7 @@ public abstract class PathNavigation {
      // Paper start
      public boolean isViableForPathRecalculationChecking() {
          return !this.needsPathRecalculation() &&
