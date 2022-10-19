@@ -5,7 +5,7 @@ Subject: [PATCH] conf: brand server to petal
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 441a18132eb60e1af8b624ab7cf3de61669ced1f..27b3535f53c1de721b71e04c80688e1907230178 100644
+index 2ee34f92e8a89b90448bbf710fdc0d5d6350e919..d7cd4c85a8775f979f62d5da7220a1be321743a6 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,7 +9,7 @@ plugins {
@@ -17,7 +17,7 @@ index 441a18132eb60e1af8b624ab7cf3de61669ced1f..27b3535f53c1de721b71e04c80688e19
      // Pufferfish start
      implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
-@@ -87,7 +87,7 @@ tasks.jar {
+@@ -86,7 +86,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -84,10 +84,10 @@ index fba5dbdb7bcbb55400ef18342c9b54612972a718..3f9aa4292ff45c6b6af0ddfeecb645f8
          switch (distance) {
              case -1:
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d7c77908ba7f0a0c00c06744d1ee0c1ad3ee0d7c..8527b1d2c559ce9c4608725dd455a000c75d0333 100644
+index 13c9cddf7ac0af16676050e3bcdf22b7475a0387..abc5a4a67270db2b801d02fe870e73b448fac9a7 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -916,7 +916,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -926,7 +926,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          shutdownThread = Thread.currentThread();
          org.spigotmc.WatchdogThread.doStop(); // Paper
          if (!isSameThread()) {
@@ -96,7 +96,7 @@ index d7c77908ba7f0a0c00c06744d1ee0c1ad3ee0d7c..8527b1d2c559ce9c4608725dd455a000
              while (this.getRunningThread().isAlive()) {
                  this.getRunningThread().stop();
                  try {
-@@ -1702,7 +1702,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1683,7 +1683,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -113,10 +113,10 @@ index d7c77908ba7f0a0c00c06744d1ee0c1ad3ee0d7c..8527b1d2c559ce9c4608725dd455a000
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3fffeff2f7e12c021ac4d1e6754583f58a03f12f..7176b75dc2a574240e679d0164ec77c610ecba51 100644
+index f9508a26b2e764e752da3d2c9f43a9d7de19dd27..bad90335cfed68b2abdfd52003155270e284f5c0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
+@@ -249,7 +249,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -139,10 +139,10 @@ index fb87620c742ff7912f5e8ccd2a7930dd605576d9..8c0215954360adf6c51bd71994273e8b
  
          if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index 4a88fbee3566ba54b615745a2e4801691f494557..d89aecd421b83d539d29fd5e87c1bf9a992ab2dc 100644
+index a810bfd3b8d6bd4d8f2ef8797e4281ae4fe8a67f..f8190c7d4c7b03ea05b1abbb139507b4f19c474e 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
-@@ -155,14 +155,14 @@ public class WatchdogThread extends Thread
+@@ -155,14 +155,14 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  if (isLongTimeout) {
                  // Paper end
                  log.log( Level.SEVERE, "------------------------------" );
@@ -160,7 +160,7 @@ index 4a88fbee3566ba54b615745a2e4801691f494557..d89aecd421b83d539d29fd5e87c1bf9a
                  //
                  if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
                  {
-@@ -185,12 +185,12 @@ public class WatchdogThread extends Thread
+@@ -185,12 +185,12 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  // Paper end
                  } else
                  {
@@ -172,10 +172,10 @@ index 4a88fbee3566ba54b615745a2e4801691f494557..d89aecd421b83d539d29fd5e87c1bf9a
                  log.log( Level.SEVERE, "------------------------------" );
 -                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Purpur!):" ); // Paper // Purpur
 +                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to petal!):" ); // Paper // Purpur // petal
-                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.dumpAllChunkLoadInfo(isLongTimeout); // Paper // Paper - rewrite chunk system
                  this.dumpTickingInfo(); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
-@@ -206,7 +206,7 @@ public class WatchdogThread extends Thread
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
+@@ -206,7 +206,7 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                      WatchdogThread.dumpThread( thread, log );
                  }
                  } else {
