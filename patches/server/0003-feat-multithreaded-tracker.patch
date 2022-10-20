@@ -202,19 +202,24 @@ index f597d65d56964297eeeed6c7e77703764178fee0..665c377e2d0d342f4dcc89c4cbdfcc9e
      public ChunkHolder.FullChunkStatus status;
  
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0f9b5fd5b 100644
+index 3203b953709ca7cb9172f5912a922131ad7ec9eb..3c99de7bc5b3c5159ad76f63d67877756f152385 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1237,8 +1237,27 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1237,8 +1237,37 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          entity.tracker = null; // Paper - We're no longer tracked
      }
  
 +    // petal start - multithreaded tracker
 +    private @Nullable host.bloom.tracker.MultithreadedTracker multithreadedTracker;
 +    private final java.util.concurrent.ConcurrentLinkedQueue<Runnable> trackerMainThreadTasks = new java.util.concurrent.ConcurrentLinkedQueue<>();
++    private boolean tracking = false;
 +
 +    public void runOnTrackerMainThread(final Runnable runnable) {
-+        this.trackerMainThreadTasks.add(runnable);
++        if (this.tracking) {
++            this.trackerMainThreadTasks.add(runnable);
++        } else {
++            runnable.run();
++        }
 +    }
 +
      // Paper start - optimised tracker
@@ -224,7 +229,12 @@ index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0
 +                this.multithreadedTracker = new host.bloom.tracker.MultithreadedTracker(this.level.chunkSource.entityTickingChunks, this.trackerMainThreadTasks);
 +            }
 +
-+            this.multithreadedTracker.tick();
++            this.tracking = true;
++            try {
++                this.multithreadedTracker.tick();
++            } finally {
++                this.tracking = false;
++            }
 +            return;
 +        }
 +        // petal end
@@ -233,7 +243,7 @@ index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0
          //this.level.timings.tracker1.startTiming(); // Purpur
          try {
              for (TrackedEntity tracker : this.entityMap.values()) {
-@@ -1462,11 +1481,11 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1462,11 +1491,11 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
  
      public class TrackedEntity {
  
@@ -248,7 +258,7 @@ index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0
  
          public TrackedEntity(Entity entity, int i, int j, boolean flag) {
              this.serverEntity = new ServerEntity(ChunkMap.this.level, entity, j, flag, this::broadcast, this.seenBy); // CraftBukkit
-@@ -1478,7 +1497,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1478,7 +1507,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          // Paper start - use distance map to optimise tracker
          com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> lastTrackerCandidates;
  
@@ -257,7 +267,7 @@ index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0
              com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> oldTrackerCandidates = this.lastTrackerCandidates;
              this.lastTrackerCandidates = newTrackerCandidates;
  
-@@ -1550,7 +1569,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1550,7 +1579,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          }
  
          public void removePlayer(ServerPlayer player) {
@@ -266,7 +276,7 @@ index 3203b953709ca7cb9172f5912a922131ad7ec9eb..b39a01b903eafa15a2fc758bc74fa9b0
              if (this.seenBy.remove(player.connection)) {
                  this.serverEntity.removePairing(player);
              }
-@@ -1558,7 +1577,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1558,7 +1587,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          }
  
          public void updatePlayer(ServerPlayer player) {
