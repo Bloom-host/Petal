@@ -8,10 +8,10 @@ Subject: [PATCH] feat: reduce work done by game event system
 2. euclideangameeventdispatcher is not used concurrently so we ban that usage for improved performance with allays
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 571a1cbee376032b6b9f36c9fe3f9199a3ad3197..92e7ba78e18efb8263475ecc076bc49e88b85e84 100644
+index c888e654ab9449bfdc7dfe16078eb0786ae6c15e..3448cba3b57296866d1f5d5cd5f008a8462d3b7d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1703,6 +1703,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1705,6 +1705,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  if (chunk != null) {
                      for (int j2 = k; j2 <= j1; ++j2) {
                          flag |= chunk.getEventDispatcher(j2).walkListeners(event, emitterPos, emitter, (gameeventlistener, vec3d1) -> {
@@ -38,7 +38,7 @@ index 22c309343299e60ed8028229b7f134109001ff35..d5947d29295ddc93ba8ac1c0fc61f7ba
          org.bukkit.craftbukkit.event.CraftEventFactory.sourceBlockOverride = blockEntity.getBlockPos(); // CraftBukkit - SPIGOT-7068: Add source block override, not the most elegant way but better than passing down a BlockPosition up to five methods deep.
          blockEntity.sculkSpreader.updateCursors(world, pos, world.getRandom(), true);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 620173eef4c2f30a97a4c2f8049ea01fcc60d0b2..bdf67c916fe435f3bd04a61cce6db93c606515ce 100644
+index 7bae0525cc48d531de5a949f038417e098a59443..2ca706d9d42721ca1b5c8cc959aead9ac93c481a 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -84,7 +84,18 @@ public class LevelChunk extends ChunkAccess {
